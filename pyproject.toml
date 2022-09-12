@@ -1,0 +1,111 @@
+[tool.poetry]
+name = "ml-zoomcamp"
+version = "0.1.0"
+description = "ml course by ml-zoomcamp"
+authors = ["pro100v"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-dotenv = "^0.21.0"
+pandas = "^1.4.4"
+matplotlib = "^3.5.3"
+seaborn = "^0.12.0"
+flake8-commas = "^2.1.0"
+flake8-quotes = "^3.3.1"
+flake8-bandit = "<5.0.0"
+flake8-docstrings = "^1.6.0"
+
+
+[tool.poetry.dev-dependencies]
+flakeheaven = "^3.0.0"
+ipython = "^8.5.0"
+isort = "^5.10.1"
+jupyter = "^1.0.0"
+mypy = "^0.971"
+pydocstyle = "^6.1.1"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+# [tool.poetry.scripts]
+# flakeheaven = "flakeheaven:entrypoint"
+# flake8heavened = "flakeheaven:flake8_entrypoint"
+
+[tool.poetry.plugins."flake8.extension"]
+pylint = "flakeheaven.plugins:PyLintChecker"
+
+[tool.poetry.plugins."flake8.report"]
+baseline = "flakeheaven.formatters:BaseLineFormatter"
+colored = "flakeheaven.formatters:ColoredFormatter"
+gitlab = "flakeheaven.formatters:GitlabFormatter"
+grouped = "flakeheaven.formatters:GroupedFormatter"
+json = "flakeheaven.formatters:JSONFormatter"
+stat = "flakeheaven.formatters:StatFormatter"
+
+[tool.mypy]
+python_version = "3.9"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+   "geopandas",
+   "joblib",
+   "lightgbm",
+   "pandas",
+   "sklearn.metrics",
+   "shapely.geometry",
+   "yaml"
+]
+ignore_missing_imports = true
+
+[tool.flakeheaven]
+# optionally inherit from remote config (or local if you want)
+base = "https://raw.githubusercontent.com/flakeheaven/flakeheaven/main/pyproject.toml"
+# specify any flake8 options. For example, exclude "example.py":
+exclude = ["example.py", "setup.py", "README.rst", ".venv", ".git"]
+# make output nice
+format = "grouped"
+# 80 chars aren't enough in 21 century
+max_line_length = 90
+# show line of source code in output
+show_source = true
+max-complexity = 10
+# don't work inline-quotes, insted configured `tox.ini`
+inline-quotes = 'double'
+
+# list of plugins and rules for them
+[tool.flakeheaven.plugins]
+# # include everything in pyflakes except F401
+# pyflakes = ["+*", "-F401"]
+# # enable only codes from S100 to S199
+# flake8-bandit = ["-*", "+S1??"]
+# # enable everything that starts from `flake8-`
+# "flake8-*" = ["+*"]
+# # explicitly disable plugin
+# flake8-docstrings = ["-*"]
+pycodestyle = ["+*"]
+pyflakes = ["+*"]
+flake8-commas = ["+*"]
+flake8-quotes = [
+   "+*",
+   "-Q000", # black already deals with quoting
+]
+# pylint = ["+F*", "+E*", "-E0611", "-E1101", "-E0401", "-E1102", "-E1123"]
+pylint = ["+*"]
+flake8-bandit = ["+*"]
+flake8-docstrings = ["+*"]
+
+[tool.black]
+line-length = 90
+exclude = "tests/fixtures"
+
+[tool.flakeheaven.exceptions."tests/"]
+flake8-bandit  = [
+   "-S101",     # disable a check use of assert
+]
+
+[tool.flakeheaven.exceptions."**/*probe*.py"]
+"*" = ["-*"]     # disable all checks
